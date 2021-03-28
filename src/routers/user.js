@@ -5,7 +5,8 @@ const User = require('../models/user');
 const auth = require('../middleware/auth');
 
 router.post('/users', async (req, res) => {
-  const user = new User(req.body); // Get from request on frontend
+  // Signup
+  const user = new User(req.body);
   try {
     await user.save();
     const token = await user.generateAuthToken();
@@ -22,7 +23,7 @@ router.post('/users/login', async (req, res) => {
       req.body.password
     );
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+    res.send({ user, token }); // UserSchema.methods.toJSON
   } catch (e) {
     res.status(400).send();
   }
