@@ -36,6 +36,13 @@ const UserSchema = new mongoose.Schema({
   ],
 });
 
+// Connect the two collection -> Not stored in DB(Virtual)
+UserSchema.virtual('task', {
+  ref: 'Task',
+  localField: '_id',
+  foreignField: 'owner',
+});
+
 UserSchema.methods.toJSON = function () {
   const user = this;
   const userObj = user.toObject();

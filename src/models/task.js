@@ -10,6 +10,11 @@ const TaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User', // Model Name -> Enable to fetch all data
+  },
 });
 
 const Task = mongoose.model('Task', TaskSchema);
