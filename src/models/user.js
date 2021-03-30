@@ -4,38 +4,43 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Task = require('./task');
 
-const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw Error('Email is invalid!');
-      }
+const UserSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-    minLength: 7,
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw Error('Email is invalid!');
+        }
       },
     },
-  ],
-});
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+      minLength: 7,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 // Connect the two collection -> Not stored in DB(Virtual)
 UserSchema.virtual('task', {
