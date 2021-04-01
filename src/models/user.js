@@ -36,6 +36,9 @@ const UserSchema = new mongoose.Schema(
         },
       },
     ],
+    image: {
+      type: Buffer,
+    },
   },
   {
     timestamps: true,
