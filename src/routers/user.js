@@ -119,4 +119,18 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
   res.send();
 });
 
+router.get('/users/:id/avatar', async (req, res) => {
+  // Fetch image
+  try {
+    const user = User.findById(req.params.id);
+    if (!user || !user.avatar) {
+      throw new Error();
+    }
+    res.set('Content-Type', 'image/jpg'); // Response Header
+    res.send(user.avatar);
+  } catch (err) {
+    res.status(404).send();
+  }
+});
+
 module.exports = router;
