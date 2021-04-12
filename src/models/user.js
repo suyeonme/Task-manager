@@ -11,6 +11,9 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    avatar: {
+      type: Buffer,
+    },
     email: {
       type: String,
       unique: true,
@@ -36,9 +39,6 @@ const UserSchema = new mongoose.Schema(
         },
       },
     ],
-    image: {
-      type: Buffer,
-    },
   },
   {
     timestamps: true,
