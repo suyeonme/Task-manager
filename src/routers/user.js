@@ -2,15 +2,21 @@ const express = require('express');
 const multer = require('multer');
 const sharp = require('sharp');
 
-const router = new express.Router();
 const User = require('../models/user');
 const auth = require('../middleware/auth');
+const {
+  sendWelcomeEmail,
+  sendCancelationEmail,
+} = require('../emails/accounts.js');
+
+const router = new express.Router();
 
 router.post('/users', async (req, res) => {
   // Signup
   const user = new User(req.body);
   try {
     await user.save();
+    sendWelcomeEmail(user.email, user.name);
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (err) {
@@ -79,6 +85,7 @@ router.patch('/users/me', auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
   try {
     await req.user.remove();
+    sendCancelationEmail(req.user.email, req.user.name);
     res.send(req.user);
   } catch (err) {
     res.status(500).send();
@@ -86,13 +93,13 @@ router.delete('/users/me', auth, async (req, res) => {
 });
 
 const storage = multer.memoryStorage();
+
 const upload = multer({
   limits: {
-    // fieldSize: 10 * 1024 * 1024,
     fileSize: 10 * 1024 * 1024,
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|PNG)$/)) {
       return cb(new Error('Please upload a jpg, jpeg, png images'));
     }
     cb(null, true);
@@ -126,16 +133,15 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
 });
 
 router.get('/users/:id/avatar', async (req, res) => {
-  // Fetch image
   try {
-    const user = User.findById(req.params.id);
+    const user = await User.findById(req.params.id);
     if (!user || !user.avatar) {
       throw new Error();
     }
-    res.set('Content-Type', 'image/png'); // Response Header
+    res.set('Content-Type', 'image/jpeg');
     res.send(user.avatar);
-  } catch (err) {
-    res.status(404).send();
+  } catch (e) {
+    res.status(500).send(e);
   }
 });
 
