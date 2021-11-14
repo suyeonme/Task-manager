@@ -53,7 +53,7 @@ UserSchema.virtual('task', {
 });
 
 UserSchema.methods.toJSON = function () {
-  const user = this;
+  const user = this; // documents
   const userObj = user.toObject();
 
   delete userObj.password;

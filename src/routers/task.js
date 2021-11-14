@@ -40,6 +40,7 @@ router.get('/task', auth, async (req, res) => {
       sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
     }
 
+    // Populate virtuals
     await req.user
       .populate({
         path: 'task',
