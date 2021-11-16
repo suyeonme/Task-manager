@@ -1,13 +1,5 @@
-const express = require('express');
-require('./db/mongoose'); // Connect mongose to mongoDB
-const userRouter = require('./routers/user');
-const taskRouter = require('./routers/task');
-
-const app = express();
-
-app.use(express.json()); // Convert json to object
-app.use(userRouter);
-app.use(taskRouter);
+// 테스트 파일에서 app에 접근하기 위해서 index.js와 app.js로 분기
+const app = require('./app');
 
 app.listen(process.env.PORT, () => {
   console.log('Server is up on ' + process.env.PORT);
